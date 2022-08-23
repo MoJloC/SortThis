@@ -1,0 +1,6 @@
+-i
+-d
+src\main\resources\result.txt
+int1.txt
+int2.txt
+int3.txt
