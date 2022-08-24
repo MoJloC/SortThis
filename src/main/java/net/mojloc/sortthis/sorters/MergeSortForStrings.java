@@ -1,6 +1,6 @@
-package net.mojloc.sortthis;
+package net.mojloc.sortthis.sorters;
 
-class MergeSortForStrings implements Sorter<String> {
+public class MergeSortForStrings implements Sorter<String> {
     private int typeOfSort;
 
     @Override

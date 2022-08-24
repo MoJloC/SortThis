@@ -1,6 +1,8 @@
-package net.mojloc.sortthis;
+package net.mojloc.sortthis.sorters;
 
-class MergeSortForWholeNumbers implements Sorter<String> {
+import net.mojloc.sortthis.ComparatorForNumbersAsStrings;
+
+public class MergeSortForWholeNumbers implements Sorter<String> {
     private final ComparatorForNumbersAsStrings comparator = new ComparatorForNumbersAsStrings();
     private int typeOfSort;
 

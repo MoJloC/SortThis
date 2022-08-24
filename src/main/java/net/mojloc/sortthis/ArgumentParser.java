@@ -1,5 +1,6 @@
 package net.mojloc.sortthis;
 
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -8,11 +9,11 @@ import java.util.List;
 import java.util.Set;
 
 class ArgumentParser {
-    private final List<Path> inputFilesPaths = new ArrayList<>();
+    private final List<Path> sourceFilesPaths = new ArrayList<>();
     private int typeOfSort = 1;
     private String typeOfInput;
     private TypeOfData typeOfData;
-    private Path outputFilePath;
+    private Path targetFilePath;
 
     void parse(String[] arguments) {
 
@@ -50,8 +51,23 @@ class ArgumentParser {
                     System.out.println(Messages.ERROR_TYPE_OF_DATA_NOT_SPECIFIED.getMessage() + "\n");
                     System.exit(3);
                 }
-                outputFilePath = Paths.get(arguments[1]);
-                inputFilesPaths.add(Paths.get(arguments[2]));
+
+                try {
+                    targetFilePath = Paths.get(arguments[1]);
+                } catch (InvalidPathException e) {
+                    System.out.printf(Messages.ERROR_INCORRECT_TARGET_FILE_NAME.getMessage(), arguments[1]);
+                    System.exit(5);
+                }
+
+                try {
+                    sourceFilesPaths.add(Paths.get(arguments[2]));
+                } catch (InvalidPathException e) {
+                    System.out.printf(Messages.ERROR_INCORRECT_SOURCE_FILE_NAME.getMessage(), arguments[2]);
+                    System.out.println(Messages.ERROR_NO_SOURCE_FILES_FOR_WORK);
+                    System.exit(6);
+                }
+
+
             }
 
             if (arguments[0].equals("-d") || arguments[1].equals("-d")) {
@@ -68,10 +84,24 @@ class ArgumentParser {
                 System.exit(3);
             }
 
-            outputFilePath = Paths.get(arguments[2]);
+            try {
+                targetFilePath = Paths.get(arguments[2]);
+            } catch (InvalidPathException e) {
+                System.out.printf(Messages.ERROR_INCORRECT_TARGET_FILE_NAME.getMessage(), arguments[2]);
+                System.exit(5);
+            }
 
             for (int i = 3; i < arguments.length; i++) {
-                inputFilesPaths.add(Paths.get(arguments[i]));
+                try {
+                    sourceFilesPaths.add(Paths.get(arguments[i]));
+                } catch (InvalidPathException e) {
+                    System.out.printf(Messages.ERROR_INCORRECT_SOURCE_FILE_NAME.getMessage(), arguments[i]);
+                }
+            }
+
+            if (sourceFilesPaths.size() == 0) {
+                System.out.println(Messages.ERROR_NO_SOURCE_FILES_FOR_WORK);
+                System.exit(6);
             }
 
             typeOfData = Arrays.stream(TypeOfData.values()).filter(c -> c.getType().contains(typeOfInput)).findFirst().get();
@@ -86,11 +116,11 @@ class ArgumentParser {
         return typeOfData;
     }
 
-    public Path getOutputFilePath() {
-        return outputFilePath;
+    public Path getTargetFilePath() {
+        return targetFilePath;
     }
 
-    public List<Path> getInputFilesPaths() {
-        return inputFilesPaths;
+    public List<Path> getSourceFilesPaths() {
+        return sourceFilesPaths;
     }
 }

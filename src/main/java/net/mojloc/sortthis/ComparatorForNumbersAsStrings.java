@@ -1,6 +1,6 @@
 package net.mojloc.sortthis;
 
-class ComparatorForNumbersAsStrings {
+public class ComparatorForNumbersAsStrings {
     public int compare(String numberAsStringOne, String numberAsStringTwo) {
         int result;
 
