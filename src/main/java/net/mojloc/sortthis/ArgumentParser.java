@@ -67,7 +67,6 @@ class ArgumentParser {
                     System.exit(6);
                 }
 
-
             }
 
             if (arguments[0].equals("-d") || arguments[1].equals("-d")) {
@@ -85,13 +84,17 @@ class ArgumentParser {
             }
 
             try {
+                if (isArgumentsContainsTypeOfSort(arguments)) {
                 targetFilePath = Paths.get(arguments[2]);
+                } else {
+                    targetFilePath = Paths.get(arguments[1]);
+                }
             } catch (InvalidPathException e) {
                 System.out.printf(Messages.ERROR_INCORRECT_TARGET_FILE_NAME.getMessage(), arguments[2]);
                 System.exit(5);
             }
 
-            for (int i = 3; i < arguments.length; i++) {
+            for (int i = isArgumentsContainsTypeOfSort(arguments) ? 3 : 2; i < arguments.length; i++) {
                 try {
                     sourceFilesPaths.add(Paths.get(arguments[i]));
                 } catch (InvalidPathException e) {
@@ -106,6 +109,11 @@ class ArgumentParser {
 
             typeOfData = Arrays.stream(TypeOfData.values()).filter(c -> c.getType().contains(typeOfInput)).findFirst().get();
         }
+    }
+
+    private boolean isArgumentsContainsTypeOfSort(String[] arguments) {
+        return (arguments[0].equals("-d") || arguments[0].equals("-a") || arguments[1].equals("-d")
+                || arguments[1].equals("-a"));
     }
 
     public int getTypeOfSort() {
